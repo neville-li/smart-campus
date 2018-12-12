@@ -1,0 +1,15 @@
+{
+  "name": "smart-campus",
+  "version": "1.0.0",
+  "description": "A weather app that provides weather information and collect students' preferred temperature for University of Houston  ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Neville Li",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  }
+}
