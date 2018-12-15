@@ -1,0 +1,10 @@
+{
+    "development": {
+        "PORT": 3000,
+        "MONGODB_URI": "mongodb://localhost/smart-campus"
+    },
+    "test": {
+        "PORT": 3000,
+        "MONGODB_URI": "mongodb://localhost/smart-campus-test"
+    }
+}

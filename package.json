@@ -2,9 +2,10 @@
   "name": "smart-campus",
   "version": "1.0.0",
   "description": "\"An application that collects users' preferred temperature\"",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "mocha */**/test.js"
+    "start": "node app.js",
+    "test": "export NODE_ENV=test || SET NODE_ENV=test && mocha test/**/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,15 @@
   "bugs": {
     "url": "https://github.com/neville-li/smart-campus/issues"
   },
-  "homepage": "https://github.com/neville-li/smart-campus#readme"
+  "homepage": "https://github.com/neville-li/smart-campus#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0"
+  }
 }
