@@ -20,7 +20,9 @@ let userSchema = new mongoose.Schema({
     }
 });
 
-userSchema.statics.create = (email, password, preferredTemperature) => {
+userSchema.statics.create = (body) => {
+    let {email, password, preferredTemperature} = body;
+    
     let salt = bcrypt.genSaltSync(10);
     let hash = bcrypt.hashSync(password, salt);
    
@@ -30,6 +32,20 @@ userSchema.statics.create = (email, password, preferredTemperature) => {
         salt,
         preferredTemperature,
     }).save();
+};
+
+userSchema.statics.findByCredentials = function (body){
+    let {email, password} = body;
+    return this.findOne({email}).then(user => {
+        if(!user) return Promise.reject({message: "Invalid credentials"});
+
+        return new Promise ((resolve, reject) => {
+            bcrypt.compare(password, user.password, (err, res) => {
+                if(res) resolve(user);
+                reject({message: "Invalid credentials"});
+            });
+        });
+    });
 };
 
 let User = mongoose.model("User", userSchema);
