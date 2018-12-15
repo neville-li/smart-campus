@@ -1,15 +1,19 @@
 {
   "name": "smart-campus",
   "version": "1.0.0",
-  "description": "A weather app that provides weather information and collect students' preferred temperature for University of Houston  ",
-  "main": "app.js",
+  "description": "\"An application that collects users' preferred temperature\"",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha */**/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neville-li/smart-campus.git"
   },
   "author": "Neville Li",
   "license": "ISC",
-  "dependencies": {
-    "request": "^2.88.0",
-    "request-promise": "^4.2.2"
-  }
+  "bugs": {
+    "url": "https://github.com/neville-li/smart-campus/issues"
+  },
+  "homepage": "https://github.com/neville-li/smart-campus#readme"
 }
