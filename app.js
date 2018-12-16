@@ -10,18 +10,17 @@ const {User} = require("./server/models/user");
 app.set("view engine", "ejs");
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
-
 
 //Home Page
 app.get("/", (req, res) => {
-    res.send("Hello World");
+    res.render("index");
 });
 
 
 // POST /users for signing up
 app.post("/users", (req,res) => {
-
     User.create(req.body).then(user => {
         res.send(user);
     }).catch(e => {

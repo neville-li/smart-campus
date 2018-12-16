@@ -1,0 +1,34 @@
+/* primary color #c8102e */
+/* hover color #960c22 */
+
+/* secondary color #fff9d9 (yellow) */
+
+header {
+    background-color: #c8102e;
+}
+
+.jumbotron {
+    background-image: url(./../images/jumbotronBackgroundLight.jpeg);
+    background-repeat: no-repeat;
+    background-position-y: 75%;
+    background-size: cover;
+    color: white;
+}
+
+.card-header {
+    background-color: #fff9d9;
+}
+
+.jumbotron a {
+    background: white;
+}
+
+
+i {
+    font-size: 2rem;
+}
+
+#form input:focus {
+    border: #c8102e solid 0.5px; 
+    box-shadow: #ff0000 0px 0px 2px 1px;
+}
