@@ -1,11 +1,10 @@
 const {User} = require("./../../server/models/user");
 
-let seedUsers = {
-    "postUsers": [],
-    "postUsersLogin": []
-};
+let seedUsers = {};
 
 // Seeds for POST /users
+
+seedUsers["postUsers"] = [];
 
 seedUsers.postUsers.push({
     "email": "user0@example.com",
@@ -26,6 +25,8 @@ seedUsers.postUsers.push({
 
 
 //Seeds for POST /users/login
+
+seedUsers["postUsersLogin"] = [];
 
 seedUsers.postUsersLogin.push({
     // this document is added before the test begins

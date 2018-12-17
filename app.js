@@ -13,13 +13,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 
+let port = process.env.PORT || 3000;
+
 //Home Page
 app.get("/", (req, res) => {
     res.render("index");
 });
 
 
-// POST /users for signing up
+// POST /users creates a user and save the user's document to the database.
 app.post("/users", (req,res) => {
     User.create(req.body).then(user => {
         res.send(user);
@@ -28,18 +30,22 @@ app.post("/users", (req,res) => {
     });
 });
 
-// POST /users/login for logging in
+// POST /users/login logs a user in and generates a token
 app.post("/users/login", (req, res) => {
     User.findByCredentials(req.body).then(user => {
         res.send(user);
     }).catch(e => res.status(400).send(e));
 });
 
+// PATCH /users changes a user's document
+app.patch("/users", (req, res) => {
+    res.send();
+});
 
 
 
-app.listen(3000, () => {
-    console.log("server started on 3000");
+app.listen(port, () => {
+    console.log(`server started on ${port}`);
 });
 
 module.exports = {app};
