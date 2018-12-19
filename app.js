@@ -4,42 +4,64 @@ require("./server/db/db-connect");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const session = require("express-session");
+const path = require("path");
 
 const {User} = require("./server/models/user");
-
-app.set("view engine", "ejs");
+const {authenticate} = require("./server/middleware/authenticate");
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use(session({
+    secret: "secret",
+    resave: true,
+    saveUninitialized: false,
+    path: "/",
+    cookie: {
+        maxAge: 15 * 60 * 1000 // 15min
+    }
+}));
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 let port = process.env.PORT || 3000;
 
 //Home Page
 app.get("/", (req, res) => {
-    res.render("index");
+    console.log(req.sessionID);
+    res.render("login");  
 });
 
+app.get("/user", authenticate, (req, res) => {
+    let user = req.session.user;
+    res.render("index",{user, path: __dirname});
+});
 
 // POST /users creates a user and save the user's document to the database.
-app.post("/users", (req,res) => {
+app.post("/user", (req,res) => {
     User.create(req.body).then(user => {
-        res.send(user);
+        res.redirect("/");
     }).catch(e => {
         res.status(400).send(e);
     });
 });
 
 // POST /users/login logs a user in and generates a token
-app.post("/users/login", (req, res) => {
+app.post("/user/login", (req, res) => {
     User.findByCredentials(req.body).then(user => {
-        res.send(user);
+        user.generateToken().then(token => {
+           req.session.token = token;
+           res.redirect("/user");
+        }); 
     }).catch(e => res.status(400).send(e));
 });
 
 // PATCH /users changes a user's document
-app.patch("/users", (req, res) => {
-    res.send();
+app.patch("/user", authenticate, (req, res) => {
+    // User.update{{}}
 });
 
 

@@ -45,17 +45,28 @@ userSchema.statics.findByCredentials = function (credentials){
 
         return new Promise ((resolve, reject) => {
             bcrypt.compare(password, user.password, (err, res) => {
-                if(res) resolve(user);
-                reject({message: "Invalid credentials"});
+                err? reject({message: "Invalid credentials"}) :resolve(user);
             });
         });
     });
 };
 
+userSchema.statics.findByToken = function (token) {
+    return this.findOne({tokens: token}).then(user => {
+        if(!user) return Promise.reject({message: "Access Denied"});
+        return Promise.resolve(user);
+    })
+};
+
 userSchema.methods.generateToken = function () {
-    let token = jwt.sign({_id: this._id.toString()}, this.salt);
-    this.push(token);
-    return token;
+    let id = this._id.toString();
+    let token = jwt.sign({_id: id}, this.salt);
+   
+    return new Promise ((resolve, reject) => {
+        User.updateOne({_id: id}, {$push: {tokens: token}}, (err, user) => {
+            err? reject() : resolve(token);
+        });
+    });
 }
 
 let User = mongoose.model("User", userSchema);

@@ -1,22 +1,22 @@
-const {User} = require("./../../server/models/user");
+const {User} = require("../../server/models/user");
 
-let seedUsers = {};
+let seedAccounts = {};
 
 // Seeds for POST /users
 
-seedUsers["postUsers"] = [];
+seedAccounts["postUsers"] = [];
 
-seedUsers.postUsers.push({
+seedAccounts.postUsers.push({
     "email": "user0@example.com",
     "password": "user0Password"
 });
 
-seedUsers.postUsers.push({
+seedAccounts.postUsers.push({
     //Missing a email
     "password": "user1Password"
 });
 
-seedUsers.postUsers.push({
+seedAccounts.postUsers.push({
     //Register with a taken email
     "email": "user0@example.com",
     "password": "user1Password"
@@ -26,18 +26,18 @@ seedUsers.postUsers.push({
 
 //Seeds for POST /users/login
 
-seedUsers["postUsersLogin"] = [];
+seedAccounts["postUsersLogin"] = [];
 
-seedUsers.postUsersLogin.push({
+seedAccounts.postUsersLogin.push({
     // this document is added before the test begins
     "email": "user0@example.com",
     "password": "user0Password"  
 });
 
-seedUsers.postUsersLogin.push({
+seedAccounts.postUsersLogin.push({
 
     "email": "notFound@example.com",
     "password": "user0Password"  
 });
 
-module.exports = {seedUsers};
+module.exports = {seedAccounts};
