@@ -55,8 +55,22 @@ userSchema.statics.findByToken = function (token) {
     return this.findOne({tokens: token}).then(user => {
         if(!user) return Promise.reject({message: "Access Denied"});
         return Promise.resolve(user);
-    })
+    });
 };
+
+userSchema.methods.updateSettings = function (newSettings) {
+    let user = this;
+    let keys = Object.keys(newSettings);
+
+    for(key of keys){
+        user[key] = newSettings[key];
+    }
+   return user.save().then(user => {
+       return Promise.resolve(user);
+   }).catch(err => {
+       return Promise.reject(err);
+   });
+}
 
 userSchema.methods.generateToken = function () {
     let id = this._id.toString();

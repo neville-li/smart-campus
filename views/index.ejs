@@ -1,6 +1,29 @@
 <%- include ../views/partials/header %>
-    <p>home</p>
-    <p><%= user.email %></p>
-    <p></p>
+    <section id="userInfo" class="container my-5">
+        <h3>Info</h3>
+        <p>Username: <%= user.email %></p>
+        <p>Password: <%= user.password %></p>
+        <p>Preferred Temperature: <%= user.preferredTemperature %></p>
+        <p>Current Room Temperature: 60 &#176;F </p>
+    </section>
     
+    <section id="settings" class="container">
+        <h3>Settings</h3>
+        <form action="/user?_method=PATCH" method="POST">
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" value="<%=user.email%>">
+            </div>       
+            <div class="form-group">
+                <label for="temperature">Temperature</label>
+                <input type="text" name="preferredTemperature" class="form-control" id="temperature" placeholder="Temperature" value="<%=user.preferredTemperature%>">
+            </div>
+            <div class="row">
+                <a href="" class="btn btn-dark btn-block col-md-4 my-3 ml-2">Change password</a>
+            </div>
+            <a href="#" class="btn btn-outline-primary ">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+    </section>
+
 <%- include ../views/partials/footer %>

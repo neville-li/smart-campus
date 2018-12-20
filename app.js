@@ -6,10 +6,12 @@ const app = express();
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const path = require("path");
+const methodOverride = require("method-override");
 
 const {User} = require("./server/models/user");
 const {authenticate} = require("./server/middleware/authenticate");
 
+app.use(methodOverride("_method"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -31,7 +33,6 @@ let port = process.env.PORT || 3000;
 
 //Home Page
 app.get("/", (req, res) => {
-    console.log(req.sessionID);
     res.render("login");  
 });
 
@@ -61,9 +62,14 @@ app.post("/user/login", (req, res) => {
 
 // PATCH /users changes a user's document
 app.patch("/user", authenticate, (req, res) => {
-    // User.update{{}}
+    req.session.user.updateSettings(req.body)
+    .then(user => res.redirect("/user"))
+    .catch(e => {res.redirect("/user")});
 });
 
+app.delete("/user", (req, res) => {
+    res.send("delete route");
+});
 
 
 app.listen(port, () => {
