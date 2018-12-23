@@ -18,9 +18,6 @@ let userSchema = new mongoose.Schema({
     },
     preferredTemperature : {
         type: Number
-    },
-    tokens: {
-        type: Array
     }
 });
 
@@ -45,7 +42,8 @@ userSchema.statics.findByCredentials = function (credentials){
 
         return new Promise ((resolve, reject) => {
             bcrypt.compare(password, user.password, (err, res) => {
-                err? reject({message: "Invalid credentials"}) :resolve(user);
+                if(err) reject(err);
+                res? resolve(user):reject({message: "Invalid credentials"});
             });
         });
     });
@@ -74,12 +72,10 @@ userSchema.methods.updateSettings = function (newSettings) {
 
 userSchema.methods.generateToken = function () {
     let id = this._id.toString();
-    let token = jwt.sign({_id: id}, this.salt);
-   
     return new Promise ((resolve, reject) => {
-        User.updateOne({_id: id}, {$push: {tokens: token}}, (err, user) => {
-            err? reject() : resolve(token);
-        });
+        jwt.sign({id}, "jwtSecret", (err ,token) => {
+            err? reject(err) : resolve(token);
+         });
     });
 }
 

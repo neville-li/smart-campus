@@ -1,12 +1,16 @@
+const jwt = require("jsonwebtoken");
 const {User} = require("./../models/user");
 
 let authenticate = function(req, res, next) {
-    User.findByToken(req.session.token).then(user => {
-        req.session.user = user;
-        next();
-    }).catch(e => {
-        req.session = null;
-        res.redirect("/");
+    if(!req.session.token) return res.render("login");
+
+    jwt.verify(req.session.token, "jwtSecret", (err, decoded) => {
+        if(err) return res.render("login");
+
+        User.findById(decoded.id, (err, user) => {
+            req.session.user = user;
+            next();
+        });
     });
 }
 

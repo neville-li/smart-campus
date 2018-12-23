@@ -3,10 +3,12 @@ require("./server/db/db-connect");
 
 const express = require("express");
 const app = express();
+const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const path = require("path");
 const methodOverride = require("method-override");
+const MongoStore = require("connect-mongo")(session);
 
 const {User} = require("./server/models/user");
 const {authenticate} = require("./server/middleware/authenticate");
@@ -17,10 +19,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(session({
-    secret: "secret",
+    secret: "sessionSecret",
     resave: true,
     saveUninitialized: false,
     path: "/",
+    store: new MongoStore({
+        url: process.env.MONGODB_URI
+    }),
     cookie: {
         maxAge: 15 * 60 * 1000 // 15min
     }
@@ -32,13 +37,13 @@ app.set("views", path.join(__dirname, "views"));
 let port = process.env.PORT || 3000;
 
 //Home Page
-app.get("/", (req, res) => {
-    res.render("login");  
+app.get("/", authenticate,(req, res) => {
+    res.redirect("user");  
 });
 
 app.get("/user", authenticate, (req, res) => {
     let user = req.session.user;
-    res.render("index",{user, path: __dirname});
+    res.render("index",{user});
 });
 
 // POST /users creates a user and save the user's document to the database.
@@ -56,7 +61,7 @@ app.post("/user/login", (req, res) => {
         user.generateToken().then(token => {
            req.session.token = token;
            res.redirect("/user");
-        }); 
+        }).catch(e => res.status(400).send(e)); 
     }).catch(e => res.status(400).send(e));
 });
 
@@ -68,7 +73,9 @@ app.patch("/user", authenticate, (req, res) => {
 });
 
 app.delete("/user", (req, res) => {
-    res.send("delete route");
+    req.session.destroy((err) => {
+        res.redirect("/");
+    });
 });
 
 
