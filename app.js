@@ -36,11 +36,14 @@ app.set("views", path.join(__dirname, "views"));
 
 let port = process.env.PORT || 3000;
 
-//Home Page
+//Home Page or redirect user to personal main page if logged in
+//Login Page is hidden in the authenticate middleware
 app.get("/", authenticate,(req, res) => {
     res.redirect("user");  
 });
 
+
+//personal main page 
 app.get("/user", authenticate, (req, res) => {
     let user = req.session.user;
     res.render("index",{user});
@@ -69,7 +72,7 @@ app.post("/user/login", (req, res) => {
 app.patch("/user", authenticate, (req, res) => {
     req.session.user.updateSettings(req.body)
     .then(user => res.redirect("/user"))
-    .catch(e => {res.redirect("/user")});
+    .catch(e => res.redirect("/user"));
 });
 
 app.delete("/user", (req, res) => {

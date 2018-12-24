@@ -3,6 +3,14 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 let userSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
     email: {
         type: String,
         required: true,
@@ -10,11 +18,11 @@ let userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        require: true,
+        required: true,
     },
     salt: {
         type: String,
-        require:true
+        required:true
     },
     preferredTemperature : {
         type: Number
@@ -22,16 +30,17 @@ let userSchema = new mongoose.Schema({
 });
 
 userSchema.statics.create = (user) => {
-    let {email, password, preferredTemperature} = user;
+    let {firstName, lastName, email, password} = user;
     
     let salt = bcrypt.genSaltSync(10);
     let hash = bcrypt.hashSync(password, salt);
    
     return new User({
+        firstName,
+        lastName,
         email,
         password: hash,
-        salt,
-        preferredTemperature,
+        salt
     }).save();
 };
 
