@@ -1,35 +1,44 @@
 <%- include ../views/partials/header %>
-    <section id="userInfo" class="container my-5">
-        <h3>Info</h3>
-        <p>Username: <%= user.email %></p>
-        <p>Password: <%= user.password %></p>
-        <p>Preferred Temperature: <%= user.preferredTemperature %></p>
-        <p>Current Room Temperature: 60 &#176;F </p>
-    </section>
     
-    <section id="settings" class="container">
-        <h3>Settings</h3>
-        <form action="/user?_method=PATCH" method="POST">
-            <div class="form-group">
-              <label for="email">Email address</label>
-              <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" value="<%=user.email%>">
-            </div>       
-            <div class="form-group">
-                <label for="temperature">Temperature</label>
-                <input type="text" name="preferredTemperature" class="form-control" id="temperature" placeholder="Temperature" value="<%=user.preferredTemperature%>">
+    <section id="userInfo" class="jumbotron">
+            <div class="container">
+                <h1 class="display-5 py-1">Welcome, <%=user.firstName%></h1>
+                 <h3 class="">Current Location: Room T120</h3>
+                 <h3 class="mb-3">Room Temperature: 70 &deg;F</h3>
+                 <button type="button" class="btn btn-outline-dark my-3" data-toggle="modal" data-target="#settings"><i class="fas fa-cog align-middle"></i><span class="ml-3 align-middle">Settings</span></button>
+                 <form class="d-inline" action="/user?_method=DELETE" method="POST">
+                    <button class="btn btn-outline-danger btn-lg ml-3"><i class="fas fa-sign-out-alt align-middle"></i><span class="ml-3 align-middle">Sign out</span></button>
+                </form>
             </div>
-            <div class="row">
-                <a href="" class="btn btn-dark btn-block col-md-4 my-3 ml-2">Change password</a>
-            </div>
-            <a href="/user" class="btn btn-outline-primary ">Cancel</a>
-            <button type="submit" class="btn btn-primary">Save</button>
-          </form>
     </section>
 
-    <section id="logout" class="container my-5">
-        <form action="/user?_method=DELETE" method="POST">
-            <button class="btn btn-outline-danger btn-md">Log out</button>
-        </form>
-    </section>
-
+    <div class="modal fade" id="settings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="">Settings</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/user?_method=PATCH" method="POST">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" value="<%=user.email%>">
+                        </div>       
+                        <div class="form-group">
+                            <label for="temperature">Temperature</label>
+                            <input type="text" name="preferredTemperature" class="form-control" id="temperature" placeholder="Temperature" value="<%=user.preferredTemperature%>">
+                        </div>
+                        <div class="row">
+                            <a href="" class="btn btn-dark btn-block col-md-4 my-3 ml-2">Change password</a>
+                        </div>
+                            <a href="/user" class="btn btn-outline-primary ">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
 <%- include ../views/partials/footer %>
