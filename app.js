@@ -53,9 +53,7 @@ app.get("/user", authenticate, (req, res) => {
 app.post("/user", (req,res) => {
     User.create(req.body).then(user => {
         res.redirect("/");
-    }).catch(e => {
-        res.status(400).send(e);
-    });
+    }).catch(e => res.status(400).send(e));
 });
 
 // POST /users/login logs a user in and generates a token
@@ -76,9 +74,7 @@ app.patch("/user", authenticate, (req, res) => {
 });
 
 app.delete("/user", (req, res) => {
-    req.session.destroy((err) => {
-        res.redirect("/");
-    });
+    req.session.destroy(err => res.redirect("/"));
 });
 
 
