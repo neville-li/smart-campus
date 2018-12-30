@@ -38,8 +38,11 @@ let port = process.env.PORT || 3000;
 
 //Home Page or redirect user to personal main page if logged in
 //Login Page is hidden in the authenticate middleware
-app.get("/", authenticate,(req, res) => {
-    res.redirect("user");  
+
+app.get("/", authenticate, (req, res) => {
+    let user = req.session.user;
+    if (user) return res.redirect("user");  
+    res.render("login");
 });
 
 
@@ -50,7 +53,10 @@ app.get("/user", authenticate, (req, res) => {
 });
 
 // POST /users creates a user and save the user's document to the database.
-app.post("/user", (req,res) => {
+app.post("/user", (req, res) => {
+    if(req.body.password !== req.body.retypePassword) {
+        throw new Error("Password does not match");
+    }
     User.create(req.body).then(user => {
         res.redirect("/");
     }).catch(e => res.status(400).send(e));
