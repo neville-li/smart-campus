@@ -36,20 +36,18 @@ app.set("views", path.join(__dirname, "views"));
 
 let port = process.env.PORT || 3000;
 
-//Home Page or redirect user to personal main page if logged in
-//Login Page is hidden in the authenticate middleware
-
+//Login Page or redirect user to personal main page if logged in
 app.get("/", authenticate, (req, res) => {
-    let user = req.session.user;
-    if (user) return res.redirect("user");  
+    if (req.session.userId) return res.redirect("user");  
     res.render("login");
 });
 
-
 //personal main page 
 app.get("/user", authenticate, (req, res) => {
-    let user = req.session.user;
-    res.render("index",{user});
+    User.findById(req.session.userId, (err, user) => {
+        if(err) return req.session.destroy(err => res.redirect("/"));
+        res.render("index",{user});
+    }); 
 });
 
 // POST /users creates a user and save the user's document to the database.
@@ -74,9 +72,11 @@ app.post("/user/login", (req, res) => {
 
 // PATCH /users changes a user's document
 app.patch("/user", authenticate, (req, res) => {
-    req.session.user.updateSettings(req.body)
-    .then(user => res.redirect("/user"))
-    .catch(e => res.redirect("/user"));
+    User.findById(req.session.userId, (err, user) => {
+        user.updateSettings(req.body)
+        .then(user => res.redirect("/user"))
+        .catch(e => res.redirect("/user"));
+    });
 });
 
 app.delete("/user", (req, res) => {

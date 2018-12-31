@@ -24,8 +24,11 @@ let userSchema = new mongoose.Schema({
         type: String,
         required:true
     },
-    preferredTemperature : {
+    preferredTemperature: {
         type: Number
+    },
+    location: {
+        type: String
     }
 });
 
@@ -80,7 +83,7 @@ userSchema.methods.updateSettings = function (newSettings) {
 }
 
 userSchema.methods.generateToken = function () {
-    let id = this._id.toString();
+    let id = this._id;
     return new Promise ((resolve, reject) => {
         jwt.sign({id}, "jwtSecret", (err ,token) => {
             err? reject(err) : resolve(token);

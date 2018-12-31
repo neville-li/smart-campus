@@ -3,7 +3,7 @@
     <section id="userInfo" class="jumbotron">
             <div class="container">
                 <h1 class="display-5 py-1">Welcome, <%=user.firstName%></h1>
-                 <h3 class="">Current Location: Room T120</h3>
+                 <h3 class="">Current Location: <%=user.location%></h3>
                  <h3 class="mb-3">Room Temperature: 70 &deg;F</h3>
                  <button type="button" class="btn btn-outline-dark my-3" data-toggle="modal" data-target="#settings"><i class="fas fa-cog align-middle"></i><span class="ml-3 align-middle">Settings</span></button>
                  <form class="d-inline" action="/user?_method=DELETE" method="POST">
