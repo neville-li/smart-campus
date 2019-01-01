@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+
 app.use(session({
     secret: "sessionSecret",
     resave: true,
@@ -36,11 +37,36 @@ app.set("views", path.join(__dirname, "views"));
 
 let port = process.env.PORT || 3000;
 
-//Login Page or redirect user to personal main page if logged in
+//Redirect to login page or a personal main page if logged in
 app.get("/", authenticate, (req, res) => {
     if (req.session.userId) return res.redirect("user");  
-    res.render("login");
+    res.redirect("/login");
 });
+
+//Render login page
+app.get("/login", (req, res) => {
+    res.render("login",{message: undefined});
+});
+
+//submit login form and redirect to /user if correct credentials provided
+app.post("/login", async(req, res) => {
+    try{
+        const user = await  User.findByCredentials(req.body);
+        const token = await user.generateToken();
+        req.session.token = token;
+        res.redirect("/user");
+    } catch(err) {
+        res.render("login", {message: err.message});
+    }
+});
+
+//Log out and redirect back to home page
+app.delete("/login", (req, res) => {
+    req.session.destroy(err => {
+        res.render("login",{message: "You have logged out successfully"});
+    });
+});
+
 
 //personal main page 
 app.get("/user", authenticate, (req, res) => {
@@ -51,23 +77,13 @@ app.get("/user", authenticate, (req, res) => {
 });
 
 // POST /users creates a user and save the user's document to the database.
-app.post("/user", (req, res) => {
-    if(req.body.password !== req.body.retypePassword) {
-        throw new Error("Password does not match");
+app.post("/user", async(req, res) => {
+    try {
+        const user = await User.create(req.body);
+        res.render("index", {user});
+    } catch(err) {
+        res.render("login", {message: err.message});
     }
-    User.create(req.body).then(user => {
-        res.redirect("/");
-    }).catch(e => res.status(400).send(e));
-});
-
-// POST /users/login logs a user in and generates a token
-app.post("/user/login", (req, res) => {
-    User.findByCredentials(req.body).then(user => {
-        user.generateToken().then(token => {
-           req.session.token = token;
-           res.redirect("/user");
-        }).catch(e => res.status(400).send(e)); 
-    }).catch(e => res.status(400).send(e));
 });
 
 // PATCH /users changes a user's document
@@ -77,10 +93,6 @@ app.patch("/user", authenticate, (req, res) => {
         .then(user => res.redirect("/user"))
         .catch(e => res.redirect("/user"));
     });
-});
-
-app.delete("/user", (req, res) => {
-    req.session.destroy(err => res.redirect("/"));
 });
 
 

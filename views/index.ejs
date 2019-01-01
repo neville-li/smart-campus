@@ -1,12 +1,12 @@
-<%- include ../views/partials/header %>
+<%- include partials/header %>
     
     <section id="userInfo" class="jumbotron">
             <div class="container">
                 <h1 class="display-5 py-1">Welcome, <%=user.firstName%></h1>
-                 <h3 class="">Current Location: <%=user.location%></h3>
-                 <h3 class="mb-3">Room Temperature: 70 &deg;F</h3>
+                 <h3 class="">Current Location: <%=user.location ? user.location : "Unknown"%></h3>
+                 <h3 class="mb-3">Room Temperature: <%=user.location ? `80 \u00B0F` : "N/A"%></h3>
                  <button type="button" class="btn btn-outline-dark my-3" data-toggle="modal" data-target="#settings"><i class="fas fa-cog align-middle"></i><span class="ml-3 align-middle">Settings</span></button>
-                 <form class="d-inline" action="/user?_method=DELETE" method="POST">
+                 <form class="d-inline" action="/login?_method=DELETE" method="POST">
                     <button class="btn btn-outline-danger btn-lg ml-3"><i class="fas fa-sign-out-alt align-middle"></i><span class="ml-3 align-middle">Sign out</span></button>
                 </form>
             </div>
@@ -56,4 +56,4 @@
               </div>
             </div>
           </div>
-<%- include ../views/partials/footer %>
+<%- include partials/footer %>

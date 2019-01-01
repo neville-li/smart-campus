@@ -20,10 +20,6 @@ let userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    salt: {
-        type: String,
-        required:true
-    },
     preferredTemperature: {
         type: Number
     },
@@ -33,29 +29,31 @@ let userSchema = new mongoose.Schema({
 });
 
 userSchema.statics.create = (user) => {
-    let {firstName, lastName, email, password} = user;
+    const {firstName, lastName, email, password, retypePassword} = user;
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+
+    if(password !== retypePassword){
+        return Promise.reject({message: "Does not match with password"});
+    } 
     
-    let salt = bcrypt.genSaltSync(10);
-    let hash = bcrypt.hashSync(password, salt);
-   
     return new User({
         firstName,
         lastName,
         email,
-        password: hash,
-        salt
+        password: hash
     }).save();
 };
 
 userSchema.statics.findByCredentials = function (credentials){
     let {email, password} = credentials;
     return this.findOne({email}).then(user => {
-        if(!user) return Promise.reject({message: "Invalid credentials"});
+        if(!user) return Promise.reject({message: "Incorrect email or password"});
 
         return new Promise ((resolve, reject) => {
             bcrypt.compare(password, user.password, (err, res) => {
                 if(err) reject(err);
-                res? resolve(user):reject({message: "Invalid credentials"});
+                res? resolve(user):reject({message: "Incorrect email or password"});
             });
         });
     });
