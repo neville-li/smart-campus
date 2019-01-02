@@ -14,11 +14,11 @@
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#login" role="tab"
+                        <a class="nav-link <%= !toggleForm &&'active'%>" id="home-tab" data-toggle="tab" href="#login" role="tab"
                             aria-controls="home" aria-selected="true">LOGIN</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#signUp" role="tab"
+                        <a class="nav-link <%= toggleForm &&'active'%>" id="profile-tab" data-toggle="tab" href="#signUp" role="tab"
                             aria-controls="profile" aria-selected="false">SIGN UP</a>
                     </li>
                 </ul>
@@ -26,7 +26,7 @@
             <div class="card-body">
                 <div class="tab-content" id="myTabContent">
                     <!-- Login Form -->
-                    <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                    <div class="tab-pane fade <%= !toggleForm &&'show active'%>" id="login" role="tabpanel" aria-labelledby="login-tab">
                         <form action="/login" method="POST" class="px-3 pt-3">
                             <div class="form-group">
                                 <label for="loginEmail1">Email address</label>
@@ -42,7 +42,7 @@
                     </div>
 
                     <!-- Sign Up Form -->
-                    <div class="tab-pane fade" id="signUp" role="tabpanel" aria-labelledby="Sign Up-tab">
+                    <div class="tab-pane fade <%= toggleForm &&'show active'%>" id="signUp" role="tabpanel" aria-labelledby="Sign Up-tab">
                         <form action="/user" method="POST" class="px-3 pt-3">
                             <div class="form-group">
                                 <label for="firsName">First name</label>
@@ -80,4 +80,5 @@
         </div>
     </section>
 
+<%- include partials/libs %>
 <%- include partials/footer %>

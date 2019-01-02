@@ -45,9 +45,10 @@ app.get("/", authenticate, (req, res) => {
 
 //Render login page
 app.get("/login", (req, res) => {
-    const {message} = req.session;
+    const {message, toggleForm} = req.session;
     req.session.message = undefined;
-    res.render("login",{message});
+    req.session.toggleForm = undefined;
+    res.render("login",{message, toggleForm});
 });
 
 //submit login form and redirect to /user if correct credentials provided
@@ -73,8 +74,10 @@ app.delete("/login", (req, res) => {
 //personal main page 
 app.get("/user", authenticate, async(req, res) => {
     try {
+        const {showSettings} = req.session;
+        req.session.showSettings = undefined;
         const user = await User.findById(req.session.userId).exec();
-        res.render("index",{user});
+        res.render("index",{user,showSettings});
     } catch(err) {
         req.session.destroy(err => res.redirect("/"));
     }
@@ -89,6 +92,7 @@ app.post("/user", async(req, res) => {
         res.redirect("/user");
     } catch(err) {
         req.session.message = err.message;
+        req.session.toggleForm = true;
         res.redirect("/login");
     }
 });
@@ -100,7 +104,8 @@ app.patch("/user", authenticate, async(req, res) => {
         await user.updateSettings(req.body);
         res.redirect("/user");
     } catch(err) {
-        res.status(400).send(err);
+        req.session.showSettings = true;
+        res.redirect("/user");
     }
 });
 

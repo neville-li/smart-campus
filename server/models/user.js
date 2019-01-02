@@ -29,7 +29,7 @@ let userSchema = new mongoose.Schema({
         type: Number,
         validate: {
             validator: temp => (temp >= 65 && temp <= 85),
-            message: props => `Temperature must be within 65\u00B0F 85\u00B0F`
+            message: props => `Temperature must be within the range of 65\u00B0F - 85\u00B0F`
         }
     },
     location: {
@@ -77,7 +77,7 @@ userSchema.statics.findByToken = function (token) {
 
 userSchema.methods.updateSettings = function (newSettings) {
     let user = this;
-    let keys = Object.keys(newSettings);
+    const keys = Object.keys(newSettings);
 
     for(key of keys){
         user[key] = newSettings[key];
@@ -90,7 +90,7 @@ userSchema.methods.updateSettings = function (newSettings) {
 }
 
 userSchema.methods.generateToken = function () {
-    let id = this._id;
+    const id = this._id;
     return new Promise ((resolve, reject) => {
         jwt.sign({id}, "jwtSecret", (err ,token) => {
             err? reject(err) : resolve(token);

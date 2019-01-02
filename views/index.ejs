@@ -12,7 +12,7 @@
             </div>
     </section>
 
-    <div class="modal fade" id="settings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal" id="settings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -53,7 +53,15 @@
                         </div>
                     </form>
                 </div>
-              </div>
             </div>
-          </div>
+        </div>
+    </div>
+<%- include partials/libs %>
+    <script type="text/javascript">
+        if(<%=showSettings%>){
+            $(window).on('load',function(){
+                $('#settings').modal('show');
+            });
+        }
+    </script>
 <%- include partials/footer %>
