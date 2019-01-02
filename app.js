@@ -45,54 +45,63 @@ app.get("/", authenticate, (req, res) => {
 
 //Render login page
 app.get("/login", (req, res) => {
-    res.render("login",{message: undefined});
+    const {message} = req.session;
+    req.session.message = undefined;
+    res.render("login",{message});
 });
 
 //submit login form and redirect to /user if correct credentials provided
 app.post("/login", async(req, res) => {
     try{
-        const user = await  User.findByCredentials(req.body);
+        const user = await User.findByCredentials(req.body);
         const token = await user.generateToken();
         req.session.token = token;
         res.redirect("/user");
     } catch(err) {
-        res.render("login", {message: err.message});
+        req.session.message = err.message;
+        res.redirect("/login");
     }
 });
 
 //Log out and redirect back to home page
 app.delete("/login", (req, res) => {
     req.session.destroy(err => {
-        res.render("login",{message: "You have logged out successfully"});
+        res.redirect("/login");
     });
 });
 
-
 //personal main page 
-app.get("/user", authenticate, (req, res) => {
-    User.findById(req.session.userId, (err, user) => {
-        if(err) return req.session.destroy(err => res.redirect("/"));
+app.get("/user", authenticate, async(req, res) => {
+    try {
+        const user = await User.findById(req.session.userId).exec();
         res.render("index",{user});
-    }); 
+    } catch(err) {
+        req.session.destroy(err => res.redirect("/"));
+    }
 });
 
 // POST /users creates a user and save the user's document to the database.
 app.post("/user", async(req, res) => {
     try {
         const user = await User.create(req.body);
-        res.render("index", {user});
+        const token = await user.generateToken();
+        req.session.token = token;
+        res.redirect("/user");
     } catch(err) {
-        res.render("login", {message: err.message});
+        req.session.message = err.message;
+        res.redirect("/login");
     }
 });
 
 // PATCH /users changes a user's document
-app.patch("/user", authenticate, (req, res) => {
-    User.findById(req.session.userId, (err, user) => {
-        user.updateSettings(req.body)
-        .then(user => res.redirect("/user"))
-        .catch(e => res.redirect("/user"));
-    });
+app.patch("/user", authenticate, async(req, res) => {
+    try {
+        const user = await User.findById(req.session.userId).exec();
+        await user.updateSettings(req.body);
+        res.redirect("/user");
+    } catch(err) {
+        res.status(400).send(err);
+    }
 });
 
 

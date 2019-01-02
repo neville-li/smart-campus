@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const validator = require("validator");
 
 let userSchema = new mongoose.Schema({
     firstName: {
@@ -14,14 +15,22 @@ let userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        validate: {
+            validator: email => validator.isEmail(email),
+            message: props => `${props.value} is not a valid email`
+        }
     },
     password: {
         type: String,
         required: true,
     },
     preferredTemperature: {
-        type: Number
+        type: Number,
+        validate: {
+            validator: temp => (temp >= 65 && temp <= 85),
+            message: props => `Temperature must be within 65\u00B0F 85\u00B0F`
+        }
     },
     location: {
         type: String
