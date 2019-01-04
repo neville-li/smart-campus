@@ -46,18 +46,15 @@
                         <form action="/user" method="POST" class="px-3 pt-3">
                             <div class="form-group">
                                 <label for="firsName">First name</label>
-                                <input type="text" class="form-control" id="firsName" name="firstName" aria-describedby="firstName"
-                                    placeholder="">
+                                <input type="text" class="form-control" id="firsName" name="firstName" aria-describedby="firstName" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label for="lastName">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" name="lastName" aria-describedby="lastName"
-                                    placeholder="">
+                                <input type="text" class="form-control" id="lastName" name="lastName" aria-describedby="lastName" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label for="signUpEmail">Email address</label>
-                                <input type="email" class="form-control" id="signUpEmail" name="email" aria-describedby="emailHelp"
-                                    placeholder="">
+                                <input type="email" class="form-control" id="signUpEmail" name="email" aria-describedby="emailHelp" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label for="signUpPassword">Password</label>
@@ -75,8 +72,10 @@
                 </div>
             </div>
         </div>
-        <div id="messageArea" class="m-3 text-center">
-            <p><%=message && message%></p>
+        <div id="messageArea" class="m-3 text-center row justify-content-center">
+        <% if(message) { %>
+            <p class="error col-md-8 col-lg-6 rounded"><%= message %></p> 
+        <% } %>
         </div>
     </section>
 

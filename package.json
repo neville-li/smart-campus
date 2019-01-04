@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "test": "export NODE_ENV=test || SET NODE_ENV=test && mocha test/**/*.test.js",
-    "nodemon-dev": "nodemon app.js"
+    "nodemon-dev": "nodemon app.js",
+    "sass": "node-sass public/scss/main.scss public/css/main.css --watch"
   },
   "repository": {
     "type": "git",

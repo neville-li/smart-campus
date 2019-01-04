@@ -28,7 +28,7 @@ let userSchema = new mongoose.Schema({
     preferredTemperature: {
         type: Number,
         validate: {
-            validator: temp => (temp >= 65 && temp <= 85),
+            validator: temp => ((temp >= 65 && temp <= 85) || temp == undefined),
             message: props => `Temperature must be within the range of 65\u00B0F - 85\u00B0F`
         }
     },
@@ -43,7 +43,7 @@ userSchema.statics.create = (user) => {
     const hash = bcrypt.hashSync(password, salt);
 
     if(password !== retypePassword){
-        return Promise.reject({message: "Does not match with password"});
+        return Promise.reject({message: "Passwords do not match"});
     } 
     
     return new User({

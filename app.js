@@ -74,10 +74,11 @@ app.delete("/login", (req, res) => {
 //personal main page 
 app.get("/user", authenticate, async(req, res) => {
     try {
-        const {showSettings} = req.session;
+        const {showSettings, errors} = req.session;
         req.session.showSettings = undefined;
+        req.session.errors = undefined;
         const user = await User.findById(req.session.userId).exec();
-        res.render("index",{user,showSettings});
+        res.render("index",{user, showSettings, errors});
     } catch(err) {
         req.session.destroy(err => res.redirect("/"));
     }
@@ -105,7 +106,9 @@ app.patch("/user", authenticate, async(req, res) => {
         res.redirect("/user");
     } catch(err) {
         req.session.showSettings = true;
+        req.session.errors = err.errors;
         res.redirect("/user");
+        // res.redirect("/user");
     }
 });
 

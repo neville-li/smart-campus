@@ -41,8 +41,9 @@
                         <div>
                             <h5>Preferences</h5>
                             <div class="form-group">
-                                <label for="temperature">Temperature</label>
-                                <input type="text" name="preferredTemperature" class="form-control" id="temperature" placeholder="Temperature" value="<%=user.preferredTemperature%>">
+                                <label for="temperature">Temperature (&deg;F)</label>
+                                <input type="text" name="preferredTemperature" class="form-control <%= errors && errors.preferredTemperature && 'error'%>" id="temperature" placeholder="Temperature" value="<%=user.preferredTemperature%>">
+                                <small><%= errors && errors.preferredTemperature && errors.preferredTemperature.message%></small>
                             </div>
                         </div>
                             <div class="row">
