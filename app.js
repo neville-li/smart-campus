@@ -12,6 +12,7 @@ const MongoStore = require("connect-mongo")(session);
 
 const {User} = require("./server/models/user");
 const {authenticate} = require("./server/middleware/authenticate");
+const customValidator = require("./helpers/custom-validatior");
 
 app.use(methodOverride("_method"));
 app.use(bodyParser.json());
@@ -45,10 +46,10 @@ app.get("/", authenticate, (req, res) => {
 
 //Render login page
 app.get("/login", (req, res) => {
-    const {message, toggleForm} = req.session;
-    req.session.message = undefined;
+    const {errors, toggleForm} = req.session;
+    req.session.errors = null;
     req.session.toggleForm = undefined;
-    res.render("login",{message, toggleForm});
+    res.render("login",{errors, toggleForm});
 });
 
 //submit login form and redirect to /user if correct credentials provided
@@ -58,8 +59,8 @@ app.post("/login", async(req, res) => {
         const token = await user.generateToken();
         req.session.token = token;
         res.redirect("/user");
-    } catch(err) {
-        req.session.message = err.message;
+    } catch(error) {
+        req.session.errors = error;
         res.redirect("/login");
     }
 });
@@ -87,12 +88,13 @@ app.get("/user", authenticate, async(req, res) => {
 // POST /users creates a user and save the user's document to the database.
 app.post("/user", async(req, res) => {
     try {
+        await customValidator.checkSignUpInfo(req.body);
         const user = await User.create(req.body);
         const token = await user.generateToken();
         req.session.token = token;
         res.redirect("/user");
-    } catch(err) {
-        req.session.message = err.message;
+    } catch(error) {
+        req.session.errors = error;
         req.session.toggleForm = true;
         res.redirect("/login");
     }
@@ -108,7 +110,6 @@ app.patch("/user", authenticate, async(req, res) => {
         req.session.showSettings = true;
         req.session.errors = err.errors;
         res.redirect("/user");
-        // res.redirect("/user");
     }
 });
 

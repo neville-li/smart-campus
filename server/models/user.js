@@ -6,14 +6,17 @@ const validator = require("validator");
 let userSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: true
+        trim: true,
+        required: [true, "Required"]
     },
     lastName: {
         type: String,
-        required: true
+        trim: true,
+        required: [true, "Required"]
     },
     email: {
         type: String,
+        trim: true,
         required: true,
         unique: true,
         validate: {
@@ -38,31 +41,33 @@ let userSchema = new mongoose.Schema({
 });
 
 userSchema.statics.create = (user) => {
-    const {firstName, lastName, email, password, retypePassword} = user;
+    const {firstName, lastName, email, password} = user;
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
-
-    if(password !== retypePassword){
-        return Promise.reject({message: "Passwords do not match"});
-    } 
+    
+    // if(password !== retypedPassword){
+    //     return Promise.reject({message: "Passwords do not match"});
+    // } 
     
     return new User({
-        firstName,
-        lastName,
-        email,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
         password: hash
     }).save();
 };
 
 userSchema.statics.findByCredentials = function (credentials){
-    let {email, password} = credentials;
+    const {email, password} = credentials;
+    const err = {invalidCredentials: "Incorrect email or password"};
+
     return this.findOne({email}).then(user => {
-        if(!user) return Promise.reject({message: "Incorrect email or password"});
+        if(!user) return Promise.reject(err);
 
         return new Promise ((resolve, reject) => {
             bcrypt.compare(password, user.password, (err, res) => {
                 if(err) reject(err);
-                res? resolve(user):reject({message: "Incorrect email or password"});
+                res? resolve(user):reject(err);
             });
         });
     });
@@ -70,7 +75,7 @@ userSchema.statics.findByCredentials = function (credentials){
 
 userSchema.statics.findByToken = function (token) {
     return this.findOne({tokens: token}).then(user => {
-        if(!user) return Promise.reject({message: "Access Denied"});
+        if(!user) return Promise.reject({message: "Token validation Error"});
         return Promise.resolve(user);
     });
 };

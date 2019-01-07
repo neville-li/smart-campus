@@ -6549,4 +6549,5 @@ i {
 
 .error {
   border: 2px solid red;
-  background-color: #FFC0CB; }
+  background-color: #FFC0CB;
+  color: red; }
