@@ -46,10 +46,11 @@ app.get("/", authenticate, (req, res) => {
 
 //Render login page
 app.get("/login", (req, res) => {
-    const {errors, toggleForm} = req.session;
+    const {errors, toggleForm, savedInfo} = req.session;
     req.session.errors = null;
     req.session.toggleForm = undefined;
-    res.render("login",{errors, toggleForm});
+    req.session.savedInfo = null;
+    res.render("login",{errors, toggleForm, savedInfo});
 });
 
 //submit login form and redirect to /user if correct credentials provided
@@ -61,6 +62,7 @@ app.post("/login", async(req, res) => {
         res.redirect("/user");
     } catch(error) {
         req.session.errors = error;
+        req.session.savedInfo = req.body;
         res.redirect("/login");
     }
 });
@@ -96,6 +98,7 @@ app.post("/user", async(req, res) => {
     } catch(error) {
         req.session.errors = error;
         req.session.toggleForm = true;
+        req.session.savedInfo = req.body;
         res.redirect("/login");
     }
 });

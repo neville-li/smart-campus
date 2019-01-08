@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
+var uniqueValidator = require('mongoose-unique-validator');
 
 let userSchema = new mongoose.Schema({
     firstName: {
@@ -39,15 +40,12 @@ let userSchema = new mongoose.Schema({
         type: String
     }
 });
+userSchema.plugin(uniqueValidator, {message: "{PATH} is already taken"});
 
 userSchema.statics.create = (user) => {
     const {firstName, lastName, email, password} = user;
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
-    
-    // if(password !== retypedPassword){
-    //     return Promise.reject({message: "Passwords do not match"});
-    // } 
     
     return new User({
         firstName: firstName,

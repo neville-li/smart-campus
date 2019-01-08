@@ -33,12 +33,11 @@
                         <form action="/login" method="POST" class="px-3 pt-3">
                             <div class="form-group">
                                 <label for="loginEmail1">Email address</label>
-                                <input type="email" class="form-control" id="loginEmail1" name="email" aria-describedby="emailHelp"
-                                    placeholder="">
+                                <input type="email" class="form-control" id="loginEmail1" name="email" aria-describedby="emailHelp" value=<%= savedInfo && savedInfo.email%>>
                             </div>
                             <div class="form-group">
                                 <label for="loginPassword1">Password</label>
-                                <input type="password" class="form-control" id="loginPassword1" name="password" placeholder="">
+                                <input type="password" class="form-control" id="loginPassword1" name="password">
                             </div>
                             <button type="submit" class="btn btn-primary mt-3">Login</button>
                         </form>
@@ -49,27 +48,27 @@
                         <form action="/user" method="POST" class="px-3 pt-3">
                             <div class="form-group">
                                 <label for="firsName">First name</label>
-                                <input type="text" class="form-control <%=errors && errors.firstName && 'error'%>" id="firsName" name="firstName" aria-describedby="firstName" placeholder="">
+                                <input type="text" class="form-control <%=errors && errors.firstName && 'error'%>" id="firsName" name="firstName" aria-describedby="firstName" value=<%= savedInfo && savedInfo.firstName%>>
                                 <small><%=errors && errors.firstName && errors.firstName %></small>
                             </div>
                             <div class="form-group">
                                 <label for="lastName">Last Name</label>
-                                <input type="text" class="form-control <%=errors && errors.lastName && 'error'%>" id="lastName" name="lastName" aria-describedby="lastName" placeholder="">
+                                <input type="text" class="form-control <%=errors && errors.lastName && 'error'%>" id="lastName" name="lastName" aria-describedby="lastName" value=<%= savedInfo && savedInfo.lastName%>>
                                 <small><%=errors && errors.lastName && errors.lastName %></small>
                             </div>
                             <div class="form-group">
                                 <label for="signUpEmail">Email address</label>
-                                <input type="email" class="form-control <%=errors && errors.email && 'error'%>" id="signUpEmail" name="email" aria-describedby="emailHelp" placeholder="">
+                                <input type="email" class="form-control <%=errors && errors.email && 'error'%>" id="signUpEmail" name="email" aria-describedby="emailHelp" value=<%= savedInfo && savedInfo.email%>>
                                 <small><%=errors && errors.email && errors.email %></small>
                             </div>
                             <div class="form-group">
                                 <label for="signUpPassword">Password</label>
-                                <input type="password" class="form-control <%=errors && errors.password && 'error'%>" id="signUpPassword" name="password" placeholder="">
+                                <input type="password" class="form-control <%=errors && errors.password && 'error'%>" id="signUpPassword" name="password">
                                 <small><%=errors && errors.password && errors.password %></small>
                             </div>
                             <div class="form-group">
                                 <label for="retypePassword">Re-type password</label>
-                                <input type="password" class="form-control <%=errors && errors.retypedPassword && 'error'%>" id="retypedPassword" name="retypedPassword" placeholder="">
+                                <input type="password" class="form-control <%=errors && errors.retypedPassword && 'error'%>" id="retypedPassword" name="retypedPassword">
                                 <small><%=errors && errors.retypedPassword && errors.retypedPassword %></small>
                             </div>
                             <button type="submit" class="btn btn-primary mt-3">Sign Up</button>
@@ -79,9 +78,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="messageArea" class="m-3 text-center row justify-content-center">
-       
         </div>
     </section>
 
