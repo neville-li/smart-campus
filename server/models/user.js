@@ -18,6 +18,7 @@ let userSchema = new mongoose.Schema({
     email: {
         type: String,
         trim: true,
+        lowercase: true,
         required: true,
         unique: true,
         validate: {
@@ -57,15 +58,14 @@ userSchema.statics.create = (user) => {
 
 userSchema.statics.findByCredentials = function (credentials){
     const {email, password} = credentials;
-    const err = {invalidCredentials: "Incorrect email or password"};
-
+    const error = {invalidCredentials: "Incorrect email or password"};
+    
     return this.findOne({email}).then(user => {
-        if(!user) return Promise.reject(err);
-
+        if(!user) return Promise.reject(error);
         return new Promise ((resolve, reject) => {
             bcrypt.compare(password, user.password, (err, res) => {
-                if(err) reject(err);
-                res? resolve(user):reject(err);
+                if(err) reject(error);
+                res? resolve(user):reject(error);
             });
         });
     });
@@ -93,6 +93,7 @@ userSchema.methods.updateSettings = function (newSettings) {
 }
 
 userSchema.methods.generateToken = function () {
+    
     const id = this._id;
     return new Promise ((resolve, reject) => {
         jwt.sign({id}, "jwtSecret", (err ,token) => {

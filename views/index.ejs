@@ -49,10 +49,7 @@
                                 <small><%= errors && errors.preferredTemperature && errors.preferredTemperature.message%></small>
                             </div>
                         </div>
-                            <div class="row">
-                                <a href="" class="btn btn-dark btn-block col-md-4 my-3 ml-2">Change password</a>
-                            </div>
-                                <a href="/user" class="btn btn-outline-primary ">Cancel</a>
+                            <a href="/user" class="btn btn-outline-primary ">Cancel</a>
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </form>
@@ -61,11 +58,5 @@
         </div>
     </div>
 <%- include partials/libs %>
-    <script type="text/javascript">
-        if(<%=showSettings%>){
-            $(window).on('load',function(){
-                $('#settings').modal('show');
-            });
-        }
-    </script>
+<%- include partials/indexScript %>
 <%- include partials/footer %>

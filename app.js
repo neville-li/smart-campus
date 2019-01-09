@@ -62,7 +62,6 @@ app.post("/login", async(req, res) => {
         res.redirect("/user");
     } catch(error) {
         req.session.errors = error;
-        req.session.savedInfo = req.body;
         res.redirect("/login");
     }
 });
